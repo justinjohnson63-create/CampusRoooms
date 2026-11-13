@@ -1,0 +1,55 @@
+@model IEnumerable<CampusRooms.Models.Room>
+
+@{
+    ViewData["Title"] = "Rooms";
+}
+
+<h1>Rooms</h1>
+
+@if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Add Room</a>
+    </p>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Seats</th>
+            <th>Projector</th>
+            <th>Building</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+        <tr>
+            <td>@item.Code</td>
+            <td>@item.Name</td>
+            <td>@item.Seats</td>
+            <td>@(item.HasProjector ? "Yes" : "No")</td>
+            <td>
+                @if (item.Building != null)
+                {
+                    <a asp-controller="Buildings" asp-action="Details" asp-route-id="@item.BuildingId">@item.Building.Name</a>
+                }
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                {
+                    <text> | </text><a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <text> | </text><a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

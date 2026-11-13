@@ -1,0 +1,132 @@
+### CampusRooms API tests – Lab Exercise 02
+### Student: Justin Johnson
+###
+### Change the port below to the one shown when you run the app
+### (look in the browser address bar or Properties/launchSettings.json)
+
+@host = https://localhost:7154
+
+### ============================================================
+### 1. GET all rooms – expect 200 and five rooms
+### ============================================================
+GET {{host}}/api/rooms
+Accept: application/json
+
+### ============================================================
+### 2. GET room 3 (SB-110) – expect 200
+### ============================================================
+GET {{host}}/api/rooms/3
+Accept: application/json
+
+### ============================================================
+### 3. GET a room that does not exist – expect 404
+### ============================================================
+GET {{host}}/api/rooms/99
+Accept: application/json
+
+### ============================================================
+### 4. POST a new room – expect 201 Created + Location header
+### ============================================================
+POST {{host}}/api/rooms
+Content-Type: application/json
+
+{
+  "code": "MB-310",
+  "name": "Lecture Theatre B",
+  "seats": 80,
+  "hasProjector": true,
+  "buildingId": 1
+}
+
+### ============================================================
+### 5. Same POST again (duplicate code) – expect 409 Conflict
+### ============================================================
+POST {{host}}/api/rooms
+Content-Type: application/json
+
+{
+  "code": "MB-310",
+  "name": "Lecture Theatre B",
+  "seats": 80,
+  "hasProjector": true,
+  "buildingId": 1
+}
+
+### ============================================================
+### 6. POST with empty code and 0 seats – expect 400 + messages
+### ============================================================
+POST {{host}}/api/rooms
+Content-Type: application/json
+
+{
+  "code": "",
+  "name": "Bad Room",
+  "seats": 0,
+  "hasProjector": false,
+  "buildingId": 1
+}
+
+### ============================================================
+### 7. POST with no Content-Type header – expect 415
+### ============================================================
+POST {{host}}/api/rooms
+
+{
+  "code": "XX-001",
+  "name": "No Content Type",
+  "seats": 10,
+  "hasProjector": false,
+  "buildingId": 1
+}
+
+### ============================================================
+### 8. PUT room 2 – change seats to 32 – expect 204 No Content
+### ============================================================
+PUT {{host}}/api/rooms/2
+Content-Type: application/json
+
+{
+  "code": "MB-204",
+  "name": "Seminar Room",
+  "seats": 32,
+  "hasProjector": false,
+  "buildingId": 1
+}
+
+### ============================================================
+### 9. PUT room 2 using room 1’s code – expect 409 Conflict
+### ============================================================
+PUT {{host}}/api/rooms/2
+Content-Type: application/json
+
+{
+  "code": "MB-101",
+  "name": "Seminar Room",
+  "seats": 32,
+  "hasProjector": false,
+  "buildingId": 1
+}
+
+### ============================================================
+### 10. PUT a room that does not exist – expect 404
+### ============================================================
+PUT {{host}}/api/rooms/99
+Content-Type: application/json
+
+{
+  "code": "ZZ-999",
+  "name": "Ghost Room",
+  "seats": 10,
+  "hasProjector": false,
+  "buildingId": 1
+}
+
+### ============================================================
+### 11. DELETE room 5 – expect 204 No Content
+### ============================================================
+DELETE {{host}}/api/rooms/5
+
+### ============================================================
+### 12. DELETE room 5 again – expect 404
+### ============================================================
+DELETE {{host}}/api/rooms/5

@@ -1,0 +1,45 @@
+@model IEnumerable<CampusRooms.Controllers.UserViewModel>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h1>Users</h1>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+        <tr>
+            <td>@item.Email</td>
+            <td>
+                @if (item.IsStaff)
+                {
+                    <span class="badge bg-success">Staff</span>
+                }
+            </td>
+            <td>
+                @if (!item.IsStaff)
+                {
+                    <form asp-action="MakeStaff" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Make staff</button>
+                    </form>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
